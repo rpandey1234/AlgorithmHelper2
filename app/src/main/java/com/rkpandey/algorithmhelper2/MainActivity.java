@@ -14,15 +14,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+
+import us.feras.mdv.MarkdownView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    MarkdownView _markdownView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        _markdownView = (MarkdownView) findViewById(R.id.markdown_view);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,7 +83,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            MarkdownFileReader markdownFileReader = new MarkdownFileReader(this, R.raw.test_markdown);
+            _markdownView.loadMarkdown(markdownFileReader.getContents());
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

@@ -17,5 +17,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:id="@+id/text_hello"
+        android:text="Hello World!"
+        />
+
+    <us.feras.mdv.MarkdownView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/markdown_view"
+        android:layout_below="@+id/text_hello"
+        />
 </RelativeLayout>
