@@ -22,6 +22,7 @@ public class MarkdownFileReader {
     }
 
     public String getContents() {
+        // TODO: cache the contents so don't have to read the thing all over thing each time
         InputStream inputStream = _context.getResources().openRawResource(_fileResourceId);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 

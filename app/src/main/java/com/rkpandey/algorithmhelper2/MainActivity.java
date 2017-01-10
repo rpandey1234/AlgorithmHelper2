@@ -1,6 +1,7 @@
 package com.rkpandey.algorithmhelper2;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.style.StrikethroughSpan;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import us.feras.mdv.MarkdownView;
 
@@ -29,13 +31,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         _markdownView = (MarkdownView) findViewById(R.id.markdown_view);
+
+        // Open links clicked by user in our WebView
+        _markdownView.setWebViewClient(new WebViewClient());
+        // Enable responsive layout
+        _markdownView.getSettings().setUseWideViewPort(true);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -74,9 +81,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -84,7 +90,8 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             MarkdownFileReader markdownFileReader = new MarkdownFileReader(this, R.raw.test_markdown);
-            _markdownView.loadMarkdown(markdownFileReader.getContents());
+//            _markdownView.loadMarkdown(markdownFileReader.getContents());
+            _markdownView.loadUrl("http://www.yahoo.com");
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
