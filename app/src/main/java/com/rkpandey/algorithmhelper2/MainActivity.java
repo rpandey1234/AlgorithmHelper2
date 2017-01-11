@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            _markdownView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper/wiki");
         } else if (id == R.id.nav_gallery) {
             MarkdownFileReader markdownFileReader = new MarkdownFileReader(this, R.raw.test_markdown);
-//            _markdownView.loadMarkdown(markdownFileReader.getContents());
-            _markdownView.loadUrl("http://www.yahoo.com");
+            _markdownView.loadMarkdown(markdownFileReader.getContents());
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
