@@ -2,45 +2,40 @@ package com.rkpandey.algorithmhelper2;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.style.StrikethroughSpan;
-import android.text.style.URLSpan;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import us.feras.mdv.MarkdownView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    MarkdownView _markdownView;
+    @BindView(R.id.webview) WebView _webView;
+    @BindView(R.id.toolbar) Toolbar _toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        _markdownView = (MarkdownView) findViewById(R.id.markdown_view);
+        ButterKnife.bind(this);
 
         // Open links clicked by user in our WebView
-        _markdownView.setWebViewClient(new WebViewClient());
+        _webView.setWebViewClient(new WebViewClient());
         // Enable responsive layout
-        _markdownView.getSettings().setUseWideViewPort(true);
-        setSupportActionBar(toolbar);
+        _webView.getSettings().setUseWideViewPort(true);
+        setSupportActionBar(_toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open,
+                this, drawer, _toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -60,46 +55,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            _markdownView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper/wiki");
+            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Trees");
         } else if (id == R.id.nav_gallery) {
-            MarkdownFileReader markdownFileReader = new MarkdownFileReader(this, R.raw.test_markdown);
-            _markdownView.loadMarkdown(markdownFileReader.getContents());
+            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Lists");
         } else if (id == R.id.nav_slideshow) {
-
+            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Sorting");
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Android");
         } else if (id == R.id.nav_send) {
-
+            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
