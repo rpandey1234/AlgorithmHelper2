@@ -1,4 +1,4 @@
-package com.rkpandey.algorithmhelper2;
+package edu.stanford.rkpandey;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.rkpandey.algorithmhelper2", appContext.getPackageName());
+        assertEquals("edu.stanford.rkpandey", appContext.getPackageName());
     }
 }
