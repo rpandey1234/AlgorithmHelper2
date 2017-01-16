@@ -1,4 +1,4 @@
-package edu.stanford.rkpandey;
+package edu.stanford.algorithms;
 
 import org.junit.Test;
 

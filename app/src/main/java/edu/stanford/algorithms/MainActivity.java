@@ -1,4 +1,4 @@
-package edu.stanford.rkpandey;
+package edu.stanford.algorithms;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
