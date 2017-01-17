@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.util.Stack;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,6 +24,10 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.webview) WebView _webView;
     @BindView(R.id.toolbar) Toolbar _toolbar;
+    @BindView(R.id.drawer_layout) DrawerLayout _drawer;
+    @BindView(R.id.nav_view) NavigationView _navigationView;
+
+    private Stack<Integer> _navigationIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +41,33 @@ public class MainActivity extends AppCompatActivity
         _webView.getSettings().setUseWideViewPort(true);
         setSupportActionBar(_toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, _toolbar, R.string.navigation_drawer_open,
+                this, _drawer, _toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        _drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        _navigationIds = new Stack<>();
+        _navigationView.setNavigationItemSelectedListener(this);
+
+        _webView.loadUrl(BASE_URL + "Trees");
+        _navigationView.setCheckedItem(R.id.nav_trees);
+        _navigationIds.push(R.id.nav_trees);
+        _drawer.openDrawer(_navigationView);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (_drawer.isDrawerOpen(GravityCompat.START)) {
+            _drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (_webView.canGoBack()) {
+                _navigationIds.pop();
+                _navigationView.setCheckedItem(_navigationIds.peek());
+                _webView.goBack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -61,8 +76,8 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        _navigationIds.push(id);
         if (id == R.id.nav_trees) {
-            // Handle the camera action
             _webView.loadUrl(BASE_URL + "Trees");
         } else if (id == R.id.nav_lists) {
             _webView.loadUrl(BASE_URL + "Lists");
@@ -74,8 +89,7 @@ public class MainActivity extends AppCompatActivity
             _webView.loadUrl(BASE_URL);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        _drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
