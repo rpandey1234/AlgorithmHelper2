@@ -18,6 +18,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String BASE_URL = "https://algorithmhelper.herokuapp.com/";
+
     @BindView(R.id.webview) WebView _webView;
     @BindView(R.id.toolbar) Toolbar _toolbar;
 
@@ -59,17 +61,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_trees) {
             // Handle the camera action
-            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Trees");
-        } else if (id == R.id.nav_gallery) {
-            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Lists");
-        } else if (id == R.id.nav_slideshow) {
-            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Sorting");
-        } else if (id == R.id.nav_manage) {
-            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki/Android");
+            _webView.loadUrl(BASE_URL + "Trees");
+        } else if (id == R.id.nav_lists) {
+            _webView.loadUrl(BASE_URL + "Lists");
+        } else if (id == R.id.nav_sorting) {
+            _webView.loadUrl(BASE_URL + "Sorting");
+        } else if (id == R.id.nav_graphs) {
+            _webView.loadUrl(BASE_URL + "Graphs");
         } else if (id == R.id.nav_send) {
-            _webView.loadUrl("https://github.com/rpandey1234/AlgorithmHelper2/wiki");
+            _webView.loadUrl(BASE_URL);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
