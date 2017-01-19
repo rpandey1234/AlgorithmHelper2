@@ -1,5 +1,6 @@
 package edu.stanford.algorithms;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -39,6 +40,15 @@ public class MainActivity extends AppCompatActivity
         _webView.setWebViewClient(new WebViewClient());
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
+//        _webView.setDownloadListener(new DownloadListener() {
+//            @Override
+//            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+//                System.out.println("url: " + url);
+//                System.out.println("user agent: " + userAgent);
+//                System.out.println("content disposition: " + contentDisposition);
+//                System.out.println("contentLength: " + contentLength);
+//            }
+//        });
         setSupportActionBar(_toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,8 +95,9 @@ public class MainActivity extends AppCompatActivity
             _webView.loadUrl(BASE_URL + "Sorting");
         } else if (id == R.id.nav_graphs) {
             _webView.loadUrl(BASE_URL + "Graphs");
-        } else if (id == R.id.nav_send) {
-            _webView.loadUrl(BASE_URL);
+        } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
         }
 
         _drawer.closeDrawer(GravityCompat.START);
