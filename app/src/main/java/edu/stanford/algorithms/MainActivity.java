@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -37,18 +38,20 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         // Open links clicked by user in our WebView
-        _webView.setWebViewClient(new WebViewClient());
+//        _webView.setWebViewClient(new WebViewClient());
+//        _webView.setWebViewClient(new WebViewDownloader());
+        System.out.println("set webview client");
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
-//        _webView.setDownloadListener(new DownloadListener() {
-//            @Override
-//            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-//                System.out.println("url: " + url);
-//                System.out.println("user agent: " + userAgent);
-//                System.out.println("content disposition: " + contentDisposition);
-//                System.out.println("contentLength: " + contentLength);
-//            }
-//        });
+        _webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                System.out.println("url: " + url);
+                System.out.println("user agent: " + userAgent);
+                System.out.println("content disposition: " + contentDisposition);
+                System.out.println("contentLength: " + contentLength);
+            }
+        });
         setSupportActionBar(_toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -87,19 +90,20 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         _navigationIds.push(id);
+        String url = BASE_URL;
         if (id == R.id.nav_trees) {
-            _webView.loadUrl(BASE_URL + "Trees");
+            url += "Trees";
         } else if (id == R.id.nav_lists) {
-            _webView.loadUrl(BASE_URL + "Lists");
+            url += "Lists";
         } else if (id == R.id.nav_sorting) {
-            _webView.loadUrl(BASE_URL + "Sorting");
+            url += "Sorting";
         } else if (id == R.id.nav_graphs) {
-            _webView.loadUrl(BASE_URL + "Graphs");
+            url += "Graphs";
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
         }
-
+        _webView.loadUrl(url);
         _drawer.closeDrawer(GravityCompat.START);
         return true;
     }
