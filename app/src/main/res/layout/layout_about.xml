@@ -8,8 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="edu.stanford.algorithms.AboutActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin">
 
     <TextView
         android:text="Algorithm Helper is a community driven project. You can contribute to the project by checking out by updating/correcting the content at https://github.com/rpandey1234/AlgorithmHelper2/wiki. "
