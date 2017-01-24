@@ -15,4 +15,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/webview"
         />
+
+    <include
+        layout="@layout/layout_about"
+        android:id="@+id/about_content"
+        android:visibility="gone"
+        />
 </LinearLayout>

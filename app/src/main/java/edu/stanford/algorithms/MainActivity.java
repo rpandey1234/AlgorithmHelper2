@@ -1,6 +1,5 @@
 package edu.stanford.algorithms;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,14 +9,20 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar) Toolbar _toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout _drawer;
     @BindView(R.id.nav_view) NavigationView _navigationView;
+    @BindView(R.id.about_content) RelativeLayout _aboutContent;
+    @BindView(R.id.donate_button) Button _donateButton;
 
     private Stack<Integer> _navigationIds;
 
@@ -100,11 +107,21 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_graphs) {
             url += "Graphs";
         } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
+            // swap out content
+            _webView.setVisibility(GONE);
+            _aboutContent.setVisibility(VISIBLE);
+            _drawer.closeDrawer(GravityCompat.START);
+            return true;
         }
         _webView.loadUrl(url);
+        _webView.setVisibility(VISIBLE);
+        _aboutContent.setVisibility(GONE);
         _drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @OnClick(R.id.donate_button)
+    public void onDonateButtonTap(View view) {
+        System.out.println("Donate button tapped");
     }
 }
