@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view) NavigationView _navigationView;
     @BindView(R.id.about_content) RelativeLayout _aboutContent;
     @BindView(R.id.donate_button) Button _donateButton;
+    @BindView(R.id.rate_us_button) Button _rateUsButton;
 
     private Stack<Integer> _navigationIds;
 
@@ -123,5 +124,11 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.donate_button)
     public void onDonateButtonTap(View view) {
         System.out.println("Donate button tapped");
+    }
+
+
+    @OnClick(R.id.rate_us_button)
+    public void onRateUsButtonTap(View view){
+        System.out.println("Hello World");
     }
 }

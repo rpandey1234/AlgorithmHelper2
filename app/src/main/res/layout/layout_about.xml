@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_about"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
-        android:text="Algorithm Helper is a community driven project. You can contribute to the project by checking out by updating/correcting the content at https://github.com/rpandey1234/AlgorithmHelper2/wiki. "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/textView"
-        />
-
-    <TextView
-        android:text="If you've gotten some value from AlgorithmHelper, let us know with a small donation!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:layout_alignTop="@+id/donate_button"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Algorithm Helper is a community driven project. You can contribute to the project by checking out by updating/correcting the content at https://github.com/rpandey1234/AlgorithmHelper2/wiki. " />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/donate_button"
         android:layout_toLeftOf="@+id/donate_button"
-        android:layout_toStartOf="@+id/donate_button"/>
+        android:layout_toStartOf="@+id/donate_button"
+        android:text="If you've gotten some value from AlgorithmHelper, let us know with a small donation!" />
 
     <Button
-        android:text="Donate"
+        android:id="@+id/rate_us_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/donate_button"
+        android:textAllCaps="false"
+        android:text="Rate Us" />
+
+
+    <Button
+        android:id="@+id/donate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="101dp"
-        android:id="@+id/donate_button"
-        android:layout_below="@+id/textView"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="101dp"
+        android:text="Donate" />
 </RelativeLayout>
