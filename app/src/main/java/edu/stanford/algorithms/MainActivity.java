@@ -20,6 +20,7 @@ import java.util.Stack;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import hotchemi.android.rate.AppRate;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -128,7 +129,8 @@ public class MainActivity extends AppCompatActivity
 
 
     @OnClick(R.id.rate_us_button)
-    public void onRateUsButtonTap(View view){
+    public void onRateUsButtonTap(View view) {
         System.out.println("Hello World");
+        AppRate.with(this).showRateDialog(this);
     }
 }
