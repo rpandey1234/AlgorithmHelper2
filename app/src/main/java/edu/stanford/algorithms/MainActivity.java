@@ -1,5 +1,7 @@
 package edu.stanford.algorithms;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,8 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.DownloadListener;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -28,7 +30,9 @@ import static android.view.View.VISIBLE;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String BASE_URL = "https://algorithmhelper.herokuapp.com/";
+    public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelperContent/";
+    public static final int MILLISECONDS_UNTIL_EXPIRY = 1000 * 60 * 60 * 24; // 24 hours
+    public static final long UNSAVED = -1;
 
     @BindView(R.id.webview) WebView _webView;
     @BindView(R.id.toolbar) Toolbar _toolbar;
@@ -40,25 +44,39 @@ public class MainActivity extends AppCompatActivity
 
     private Stack<Integer> _navigationIds;
 
+    private boolean isExpired(long previousTime) {
+        return System.currentTimeMillis() - previousTime > MILLISECONDS_UNTIL_EXPIRY;
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // Open links clicked by user in our WebView
-//        _webView.setWebViewClient(new WebViewClient());
-//        _webView.setWebViewClient(new WebViewDownloader());
-        System.out.println("set webview client");
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
-        _webView.setDownloadListener(new DownloadListener() {
+        _webView.getSettings().setJavaScriptEnabled(true);
+        _webView.addJavascriptInterface(new JavascriptInterfaceDownloader(this), "downloadHtml");
+        _webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
-                System.out.println("url: " + url);
-                System.out.println("user agent: " + userAgent);
-                System.out.println("content disposition: " + contentDisposition);
-                System.out.println("contentLength: " + contentLength);
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String filename = url.replace(BASE_URL, "") + ".html";
+                boolean shouldSaveFile = false;
+                SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+                long lastSavedTime = preferences.getLong(filename, UNSAVED);
+                if (lastSavedTime == UNSAVED || isExpired(lastSavedTime)) {
+                    shouldSaveFile = true;
+                }
+
+                if (shouldSaveFile) {
+                    preferences.edit().putLong(filename, System.currentTimeMillis()).apply();
+                    _webView.loadUrl(
+                            "javascript:window.downloadHtml.processHtml('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>', '"
+                                    + filename + "');");
+                }
             }
         });
         setSupportActionBar(_toolbar);

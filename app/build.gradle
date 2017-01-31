@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "edu.stanford.algorithms"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 4
         versionName "1.2"
