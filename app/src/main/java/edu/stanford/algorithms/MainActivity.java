@@ -32,10 +32,11 @@ import static android.view.View.VISIBLE;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelperContent/";
+    public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelper/";
     public static final int MILLISECONDS_UNTIL_EXPIRY = 1000 * 60 * 60 * 24; // 24 hours
     public static final long UNSAVED = -1;
-    private static final String ERROR_FILE_PATH = "file:///android_asset/error.html";
+    public static final String FILE_PREFIX = "file://";
+    public static final String ERROR_FILE_PATH = FILE_PREFIX + "/android_asset/error.html";
 
     @BindView(R.id.webview) WebView _webView;
     @BindView(R.id.toolbar) Toolbar _toolbar;
@@ -66,28 +67,20 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                String filename;
-                if (!url.equals(ERROR_FILE_PATH) && url.contains("file:///")) {
-                    // TODO: fix me
-                    filename = url.replace("file:///data/user/0/edu.stanford.algorithms.debug/files/", "");
+                String pageName;
+                if (!url.equals(ERROR_FILE_PATH) && url.contains(FILE_PREFIX)) {
+                    pageName = url.substring(url.lastIndexOf(File.separatorChar) + 1);
                 } else if (url.contains(BASE_URL)) {
-                    filename = url.replace(BASE_URL, "");
+                    pageName = url.replace(BASE_URL, "");
                 } else {
                     // Loading an external page into the webview
                     return;
                 }
-                boolean shouldSaveFile = false;
                 SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-                long lastSavedTime = preferences.getLong(filename, UNSAVED);
+                long lastSavedTime = preferences.getLong(pageName, UNSAVED);
                 if (lastSavedTime == UNSAVED || isExpired(lastSavedTime)) {
-                    shouldSaveFile = true;
-                }
-
-                if (shouldSaveFile) {
-                    preferences.edit().putLong(filename, System.currentTimeMillis()).apply();
-                    _webView.loadUrl(
-                            "javascript:window.downloadHtml.processHtml('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>', '"
-                                    + filename + "');");
+                    preferences.edit().putLong(pageName, System.currentTimeMillis()).apply();
+                    _webView.loadUrl("javascript:window.downloadHtml.processHtml('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>','" + pageName + "');");
                 }
             }
         });
@@ -111,14 +104,14 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (_drawer.isDrawerOpen(GravityCompat.START)) {
             _drawer.closeDrawer(GravityCompat.START);
+            return;
+        }
+        if (_webView.canGoBack()) {
+            _navigationIds.pop();
+            _navigationView.setCheckedItem(_navigationIds.peek());
+            _webView.goBack();
         } else {
-            if (_webView.canGoBack()) {
-                _navigationIds.pop();
-                _navigationView.setCheckedItem(_navigationIds.peek());
-                _webView.goBack();
-            } else {
-                super.onBackPressed();
-            }
+            super.onBackPressed();
         }
     }
 
@@ -145,15 +138,13 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        long lastSavedTime = preferences.getLong(pageName, UNSAVED);
-        if (isOnline() && (lastSavedTime == UNSAVED || isExpired(lastSavedTime))) {
+        if (isOnline()) {
             // Load from internet
             _webView.loadUrl(BASE_URL + pageName);
         } else {
             // Load from local file
             String fileLocation = this.getFilesDir().getPath() + File.separator + pageName;
-            if ((new File(fileLocation)).exists()) {
+            if (new File(fileLocation).exists()) {
                 _webView.loadUrl("file://" + fileLocation);
             } else {
                 _webView.loadUrl(ERROR_FILE_PATH);

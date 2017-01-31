@@ -23,7 +23,6 @@ public class JavascriptInterfaceDownloader {
     public void processHtml(String html, String filename) {
         File file = new File(_context.getFilesDir(), filename);
         // Writing to: /data/user/0/edu.stanford.algorithms.debug/files
-        System.out.println("writing to: " + _context.getFilesDir());
         FileOutputStream fileOutputStream;
         // TODO: perhaps check if user is running out of space
         try {
