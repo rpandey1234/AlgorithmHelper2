@@ -12,10 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +43,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar) Toolbar _toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout _drawer;
     @BindView(R.id.nav_view) NavigationView _navigationView;
-    @BindView(R.id.about_content) RelativeLayout _aboutContent;
-    @BindView(R.id.donate_button) Button _donateButton;
+    @BindView(R.id.about_content) LinearLayout _aboutContent;
     @BindView(R.id.rate_us_button) Button _rateUsButton;
 
     private Stack<Integer> _navigationIds;
@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         if (_webView.canGoBack()) {
+            // TODO: could crash here is stack is empty
+            // TODO: if tap on same section, should not add to back stack twice
             _navigationIds.pop();
             if (_navigationIds.isEmpty()) {
                 _navigationView.setCheckedItem(R.id.nav_home);
@@ -138,11 +140,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_graphs) {
             pageName = "Graphs";
         } else if (id == R.id.nav_about) {
-            // swap out content
-            _webView.setVisibility(GONE);
-            _aboutContent.setVisibility(VISIBLE);
-            _drawer.closeDrawer(GravityCompat.START);
-            return true;
+            pageName = "About";
+        } else {
+            throw new IllegalStateException("Could not find the page");
         }
 
         if (isOnline()) {
@@ -157,21 +157,20 @@ public class MainActivity extends AppCompatActivity
                 _webView.loadUrl(ERROR_FILE_PATH);
             }
         }
-        _webView.setVisibility(VISIBLE);
-        _aboutContent.setVisibility(GONE);
+        _aboutContent.setVisibility(id == R.id.nav_about ? VISIBLE : GONE);
+        LayoutParams layoutParams = _webView.getLayoutParams();
+        if (id == R.id.nav_about) {
+            layoutParams.height = Utility.getDeviceHeight(this) - 600;
+        } else {
+            layoutParams.height = LayoutParams.MATCH_PARENT;
+        }
         _drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @OnClick(R.id.donate_button)
-    public void onDonateButtonTap(View view) {
-        System.out.println("Donate button tapped");
     }
 
 
     @OnClick(R.id.rate_us_button)
     public void onRateUsButtonTap(View view) {
-        System.out.println("Hello World");
         AppRate.with(this).showRateDialog(this);
     }
 
