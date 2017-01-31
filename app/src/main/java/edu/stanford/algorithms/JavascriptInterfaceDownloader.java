@@ -4,7 +4,6 @@ import android.content.Context;
 import android.webkit.JavascriptInterface;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

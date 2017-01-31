@@ -17,6 +17,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelperContent/";
     public static final int MILLISECONDS_UNTIL_EXPIRY = 1000 * 60 * 60 * 24; // 24 hours
     public static final long UNSAVED = -1;
+    private static final String ERROR_FILE_PATH = "file:///android_asset/error.html";
 
     @BindView(R.id.webview) WebView _webView;
     @BindView(R.id.toolbar) Toolbar _toolbar;
@@ -63,7 +66,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                String filename = url.replace(BASE_URL, "") + ".html";
+                String filename;
+                if (!url.equals(ERROR_FILE_PATH) && url.contains("file:///")) {
+                    // TODO: fix me
+                    filename = url.replace("file:///data/user/0/edu.stanford.algorithms.debug/files/", "");
+                } else if (url.contains(BASE_URL)) {
+                    filename = url.replace(BASE_URL, "");
+                } else {
+                    // Loading an external page into the webview
+                    return;
+                }
                 boolean shouldSaveFile = false;
                 SharedPreferences preferences = getPreferences(MODE_PRIVATE);
                 long lastSavedTime = preferences.getLong(filename, UNSAVED);
@@ -90,7 +102,6 @@ public class MainActivity extends AppCompatActivity
         _navigationIds = new Stack<>();
         _navigationView.setNavigationItemSelectedListener(this);
 
-        _webView.loadUrl(BASE_URL + "Trees");
         _navigationView.setCheckedItem(R.id.nav_trees);
         _navigationIds.push(R.id.nav_trees);
         _drawer.openDrawer(_navigationView);
@@ -117,15 +128,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         _navigationIds.push(id);
-        String url = BASE_URL;
+        String pageName = "";
         if (id == R.id.nav_trees) {
-            url += "Trees";
+            pageName = "Trees";
         } else if (id == R.id.nav_lists) {
-            url += "Lists";
+            pageName = "Lists";
         } else if (id == R.id.nav_sorting) {
-            url += "Sorting";
+            pageName = "Sorting";
         } else if (id == R.id.nav_graphs) {
-            url += "Graphs";
+            pageName = "Graphs";
         } else if (id == R.id.nav_about) {
             // swap out content
             _webView.setVisibility(GONE);
@@ -133,7 +144,21 @@ public class MainActivity extends AppCompatActivity
             _drawer.closeDrawer(GravityCompat.START);
             return true;
         }
-        _webView.loadUrl(url);
+
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        long lastSavedTime = preferences.getLong(pageName, UNSAVED);
+        if (isOnline() && (lastSavedTime == UNSAVED || isExpired(lastSavedTime))) {
+            // Load from internet
+            _webView.loadUrl(BASE_URL + pageName);
+        } else {
+            // Load from local file
+            String fileLocation = this.getFilesDir().getPath() + File.separator + pageName;
+            if ((new File(fileLocation)).exists()) {
+                _webView.loadUrl("file://" + fileLocation);
+            } else {
+                _webView.loadUrl(ERROR_FILE_PATH);
+            }
+        }
         _webView.setVisibility(VISIBLE);
         _aboutContent.setVisibility(GONE);
         _drawer.closeDrawer(GravityCompat.START);
@@ -150,5 +175,16 @@ public class MainActivity extends AppCompatActivity
     public void onRateUsButtonTap(View view) {
         System.out.println("Hello World");
         AppRate.with(this).showRateDialog(this);
+    }
+
+    public boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+        } catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+        return false;
     }
 }
