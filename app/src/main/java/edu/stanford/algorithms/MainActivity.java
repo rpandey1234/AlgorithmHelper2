@@ -92,11 +92,12 @@ public class MainActivity extends AppCompatActivity
         _drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        _webView.loadUrl(BASE_URL);
         _navigationIds = new Stack<>();
         _navigationView.setNavigationItemSelectedListener(this);
 
-        _navigationView.setCheckedItem(R.id.nav_trees);
-        _navigationIds.push(R.id.nav_trees);
+        _navigationView.setCheckedItem(R.id.nav_home);
+        _navigationIds.push(R.id.nav_home);
         _drawer.openDrawer(_navigationView);
     }
 
@@ -108,7 +109,11 @@ public class MainActivity extends AppCompatActivity
         }
         if (_webView.canGoBack()) {
             _navigationIds.pop();
-            _navigationView.setCheckedItem(_navigationIds.peek());
+            if (_navigationIds.isEmpty()) {
+                _navigationView.setCheckedItem(R.id.nav_home);
+            } else {
+                _navigationView.setCheckedItem(_navigationIds.peek());
+            }
             _webView.goBack();
         } else {
             super.onBackPressed();
@@ -122,7 +127,9 @@ public class MainActivity extends AppCompatActivity
 
         _navigationIds.push(id);
         String pageName = "";
-        if (id == R.id.nav_trees) {
+        if (id == R.id.nav_home) {
+            pageName = "index";
+        } else if (id == R.id.nav_trees) {
             pageName = "Trees";
         } else if (id == R.id.nav_lists) {
             pageName = "Lists";
