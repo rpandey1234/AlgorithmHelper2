@@ -108,9 +108,8 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         if (_webView.canGoBack()) {
-            // TODO: could crash here is stack is empty
-            // TODO: if tap on same section, should not add to back stack twice
             _navigationIds.pop();
+            // TODO: is this check necessary?
             if (_navigationIds.isEmpty()) {
                 _navigationView.setCheckedItem(R.id.nav_home);
             } else {
@@ -126,7 +125,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        if (id == _navigationIds.peek()) {
+            // User tapped on same page, don't do anything
+            _drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
         _navigationIds.push(id);
         String pageName = "";
         if (id == R.id.nav_home) {

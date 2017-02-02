@@ -22,6 +22,6 @@
     <include
         layout="@layout/layout_about"
         android:id="@+id/about_content"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 </LinearLayout>
