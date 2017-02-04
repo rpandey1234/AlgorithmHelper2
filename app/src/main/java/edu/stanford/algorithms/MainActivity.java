@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -34,6 +36,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelper/";
+    public static final String INDEX_PATH = "index";
+    public static final String TREES_PATH = "Trees";
+    public static final String LISTS_PATH = "Lists";
+    public static final String SORTING_PATH = "Sorting";
+    public static final String GRAPHS_PATH = "Graphs";
+    public static final String ABOUT_PATH = "About";
     public static final int MILLISECONDS_UNTIL_EXPIRY = 1000 * 60 * 60 * 24; // 24 hours
     public static final long UNSAVED = -1;
     public static final String FILE_PREFIX = "file://";
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.rate_us_button) Button _rateUsButton;
 
     private Stack<Integer> _navigationIds;
+    private Map<Integer, String> _idPageMap;
 
     private boolean isExpired(long previousTime) {
         return System.currentTimeMillis() - previousTime > MILLISECONDS_UNTIL_EXPIRY;
@@ -58,6 +67,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        _idPageMap = new HashMap<>();
+        _idPageMap.put(R.id.nav_home, BASE_URL + INDEX_PATH);
+        _idPageMap.put(R.id.nav_trees, BASE_URL + TREES_PATH);
+        _idPageMap.put(R.id.nav_lists, BASE_URL + LISTS_PATH);
+        _idPageMap.put(R.id.nav_sorting, BASE_URL + SORTING_PATH);
+        _idPageMap.put(R.id.nav_graphs, BASE_URL + GRAPHS_PATH);
+        _idPageMap.put(R.id.nav_about, BASE_URL + ABOUT_PATH);
 
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
@@ -67,6 +83,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                if (!isOnline()) {
+                    // Do not save the page if we're offline
+                    return;
+                }
                 String pageName;
                 if (!url.equals(ERROR_FILE_PATH) && url.contains(FILE_PREFIX)) {
                     pageName = url.substring(url.lastIndexOf(File.separatorChar) + 1);
@@ -98,7 +118,6 @@ public class MainActivity extends AppCompatActivity
 
         _navigationView.setCheckedItem(R.id.nav_home);
         _navigationIds.push(R.id.nav_home);
-        _drawer.openDrawer(_navigationView);
     }
 
     @Override
@@ -108,14 +127,12 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         if (_webView.canGoBack()) {
-            _navigationIds.pop();
-            // TODO: is this check necessary?
-            if (_navigationIds.isEmpty()) {
-                _navigationView.setCheckedItem(R.id.nav_home);
-            } else {
+            _webView.goBack();
+            if (_idPageMap.containsValue(_webView.getUrl())) {
+                // this is a navigation URL, so we should change the highlighted element in nav drawer
+                _navigationIds.pop();
                 _navigationView.setCheckedItem(_navigationIds.peek());
             }
-            _webView.goBack();
         } else {
             super.onBackPressed();
         }
@@ -131,29 +148,16 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         _navigationIds.push(id);
-        String pageName = "";
-        if (id == R.id.nav_home) {
-            pageName = "index";
-        } else if (id == R.id.nav_trees) {
-            pageName = "Trees";
-        } else if (id == R.id.nav_lists) {
-            pageName = "Lists";
-        } else if (id == R.id.nav_sorting) {
-            pageName = "Sorting";
-        } else if (id == R.id.nav_graphs) {
-            pageName = "Graphs";
-        } else if (id == R.id.nav_about) {
-            pageName = "About";
-        } else {
+        String pageName = _idPageMap.get(id);
+        if (pageName == null) {
             throw new IllegalStateException("Could not find the page");
         }
-
         if (isOnline()) {
             // Load from internet
-            _webView.loadUrl(BASE_URL + pageName);
+            _webView.loadUrl(pageName);
         } else {
             // Load from local file
-            String fileLocation = this.getFilesDir().getPath() + File.separator + pageName;
+            String fileLocation = getFilesDir().getPath() + File.separator + pageName;
             if (new File(fileLocation).exists()) {
                 _webView.loadUrl("file://" + fileLocation);
             } else {
@@ -170,7 +174,6 @@ public class MainActivity extends AppCompatActivity
         _drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     @OnClick(R.id.rate_us_button)
     public void onRateUsButtonTap(View view) {
