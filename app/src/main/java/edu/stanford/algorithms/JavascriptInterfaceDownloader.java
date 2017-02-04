@@ -24,7 +24,6 @@ public class JavascriptInterfaceDownloader {
         File file = new File(_context.getFilesDir(), filename);
         // Writing to: /data/user/0/edu.stanford.algorithms.debug/files
         FileOutputStream fileOutputStream;
-        // TODO: perhaps check if user is running out of space
         try {
             fileOutputStream = _context.openFileOutput(filename, Context.MODE_PRIVATE);
             fileOutputStream.write(html.getBytes());

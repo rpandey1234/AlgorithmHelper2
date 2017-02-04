@@ -18,6 +18,11 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.core.CrashlyticsCore;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import hotchemi.android.rate.AppRate;
+import io.fabric.sdk.android.Fabric;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -65,6 +71,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set up Crashlytics, disabled for debug builds
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+        Fabric.with(this, crashlyticsKit);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         _idPageMap = new HashMap<>();
@@ -83,8 +94,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (!isOnline()) {
-                    // Do not save the page if we're offline
+                if (!isOnline() || _idPageMap.containsValue(url)) {
+                    // Do not save the page if we're offline, or if this is not a navigation page
                     return;
                 }
                 String pageName;
@@ -155,19 +166,22 @@ public class MainActivity extends AppCompatActivity
         if (isOnline()) {
             // Load from internet
             _webView.loadUrl(pageName);
+            Answers.getInstance().logCustom(new CustomEvent(pageName));
         } else {
             // Load from local file
             String fileLocation = getFilesDir().getPath() + File.separator + pageName;
             if (new File(fileLocation).exists()) {
                 _webView.loadUrl("file://" + fileLocation);
+                Answers.getInstance().logCustom(new CustomEvent("file://" + fileLocation));
             } else {
+                Answers.getInstance().logCustom(new CustomEvent(ERROR_FILE_PATH));
                 _webView.loadUrl(ERROR_FILE_PATH);
             }
         }
         _aboutContent.setVisibility(id == R.id.nav_about ? VISIBLE : GONE);
         LayoutParams layoutParams = _webView.getLayoutParams();
         if (id == R.id.nav_about) {
-            layoutParams.height = Utility.getDeviceHeight(this) - 600;
+            layoutParams.height = Utility.getDeviceHeight(this) - Utility.dpToPx(140);
         } else {
             layoutParams.height = LayoutParams.MATCH_PARENT;
         }
@@ -177,6 +191,7 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.rate_us_button)
     public void onRateUsButtonTap(View view) {
+        Answers.getInstance().logCustom(new CustomEvent("Rate button tapped"));
         AppRate.with(this).showRateDialog(this);
     }
 
