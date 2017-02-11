@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,11 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -57,8 +55,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar) Toolbar _toolbar;
     @BindView(R.id.drawer_layout) DrawerLayout _drawer;
     @BindView(R.id.nav_view) NavigationView _navigationView;
-    @BindView(R.id.about_content) LinearLayout _aboutContent;
-    @BindView(R.id.rate_us_button) Button _rateUsButton;
+    @BindView(R.id.fab_rating) FloatingActionButton _fabRating;
 
     private Stack<Integer> _navigationIds;
     private Map<Integer, String> _idPageMap;
@@ -179,21 +176,19 @@ public class MainActivity extends AppCompatActivity
                 _webView.loadUrl(ERROR_FILE_PATH);
             }
         }
-        _aboutContent.setVisibility(id == R.id.nav_about ? VISIBLE : GONE);
-        LayoutParams layoutParams = _webView.getLayoutParams();
-        if (id == R.id.nav_about) {
-            layoutParams.height = Utility.getDeviceHeight(this) - Utility.dpToPx(140);
-        } else {
-            layoutParams.height = LayoutParams.MATCH_PARENT;
-        }
+        _fabRating.setVisibility(id == R.id.nav_about ? VISIBLE : GONE);
         _drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    @OnClick(R.id.rate_us_button)
+    @OnClick(R.id.fab_rating)
     public void onRateUsButtonTap(View view) {
         Answers.getInstance().logCustom(new CustomEvent("Rate button tapped"));
-        AppRate.with(this).showRateDialog(this);
+        AppRate.with(this)
+                .setTitle(R.string.app_rate_title)
+                .setMessage(R.string.app_rate_message)
+                .setShowLaterButton(false)
+                .showRateDialog(this);
     }
 
     public boolean isOnline() {

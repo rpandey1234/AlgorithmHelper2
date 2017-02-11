@@ -6,4 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="applogo">Application Logo</string>
+    <string name="app_rate_message">If you\'ve found this app useful, please give us a rating!
+        It won\'t take more than a minute.</string>
+    <string name="app_rate_title">Algorithm Helper \u2665</string>
 </resources>
