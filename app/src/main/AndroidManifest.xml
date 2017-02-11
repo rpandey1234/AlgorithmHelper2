@@ -28,5 +28,14 @@
             android:name="io.fabric.ApiKey"
             android:value="3dbc231fd964c368ec05480edf30c44a82d71867"
             />
+        <!-- http://stackoverflow.com/questions/37325051/notification-icon -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/push_icon"
+            />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@android:color/holo_blue_dark"
+            />
     </application>
 </manifest>
