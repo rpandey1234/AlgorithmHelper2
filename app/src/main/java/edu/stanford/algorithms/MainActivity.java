@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (!isOnline() || _idPageMap.containsValue(url)) {
+                if (!isOnline() || !_idPageMap.containsValue(url)) {
                     // Do not save the page if we're offline, or if this is not a navigation page
                     return;
                 }
@@ -159,16 +159,17 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         _navigationIds.push(id);
-        String pageName = _idPageMap.get(id);
-        if (pageName == null) {
+        String pageUrl = _idPageMap.get(id);
+        if (pageUrl == null) {
             throw new IllegalStateException("Could not find the page");
         }
         if (isOnline()) {
             // Load from internet
-            _webView.loadUrl(pageName);
-            Answers.getInstance().logCustom(new CustomEvent(pageName));
+            _webView.loadUrl(pageUrl);
+            Answers.getInstance().logCustom(new CustomEvent(pageUrl));
         } else {
             // Load from local file
+            String pageName = pageUrl.replace(BASE_URL, "");
             String fileLocation = getFilesDir().getPath() + File.separator + pageName;
             if (new File(fileLocation).exists()) {
                 _webView.loadUrl("file://" + fileLocation);
