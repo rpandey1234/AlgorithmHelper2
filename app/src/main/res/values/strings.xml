@@ -9,4 +9,8 @@
     <string name="app_rate_message">If you\'ve found this app useful, please give us a rating!
         It won\'t take more than a minute.</string>
     <string name="app_rate_title">Algorithm Helper \u2665</string>
+    <string name="about">About</string>
+    <string name="about_long">About Algorithm Helper</string>
+    <string name="sorting">Sorting</string>
+    <string name="graphs">Graphs</string>
 </resources>

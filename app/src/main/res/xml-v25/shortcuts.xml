@@ -1,0 +1,41 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="about"
+        android:enabled="true"
+        android:icon="@drawable/push_icon"
+        android:shortcutShortLabel="@string/about"
+        android:shortcutLongLabel="@string/about_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="edu.stanford.algorithms"
+            android:targetClass="edu.stanford.algorithms.MainActivity">
+            <extra android:name="ShortcutNavigation" android:value="About" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="sorting"
+        android:enabled="true"
+        android:icon="@drawable/ic_sorting"
+        android:shortcutShortLabel="@string/sorting"
+        android:shortcutLongLabel="@string/sorting">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="edu.stanford.algorithms"
+            android:targetClass="edu.stanford.algorithms.MainActivity">
+            <extra android:name="ShortcutNavigation" android:value="Sorting" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="graphs"
+        android:enabled="true"
+        android:icon="@drawable/ic_graph"
+        android:shortcutShortLabel="@string/graphs"
+        android:shortcutLongLabel="@string/graphs">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="edu.stanford.algorithms"
+            android:targetClass="edu.stanford.algorithms.MainActivity">
+            <extra android:name="ShortcutNavigation" android:value="Graphs" />
+        </intent>
+    </shortcut>
+</shortcuts>

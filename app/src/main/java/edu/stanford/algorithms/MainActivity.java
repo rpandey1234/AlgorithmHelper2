@@ -1,6 +1,7 @@
 package edu.stanford.algorithms;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -120,12 +122,25 @@ public class MainActivity extends AppCompatActivity
         _drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        _webView.loadUrl(BASE_URL);
+        int initialMenuItem = R.id.nav_home;
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            // Only relevant for API 25, Android app shortcuts
+            String shortcutNavigation = intent.getExtras().getString("ShortcutNavigation");
+            if (TextUtils.equals(getString(R.string.about), shortcutNavigation)) {
+                initialMenuItem = R.id.nav_about;
+            } else if (TextUtils.equals(getString(R.string.sorting), shortcutNavigation)) {
+                initialMenuItem = R.id.nav_sorting;
+            } else if (TextUtils.equals(getString(R.string.graphs), shortcutNavigation)) {
+                initialMenuItem = R.id.nav_graphs;
+            }
+        }
+        _webView.loadUrl(_idPageMap.get(initialMenuItem));
         _navigationIds = new Stack<>();
         _navigationView.setNavigationItemSelectedListener(this);
 
-        _navigationView.setCheckedItem(R.id.nav_home);
-        _navigationIds.push(R.id.nav_home);
+        _navigationView.setCheckedItem(initialMenuItem);
+        _navigationIds.push(initialMenuItem);
     }
 
     @Override
