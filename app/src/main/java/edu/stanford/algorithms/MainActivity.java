@@ -18,6 +18,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.appsflyer.AppsFlyerLib;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
+        AppsFlyerLib.getInstance().startTracking(this.getApplication(), "mJaxhcAiiPpiPBeJhckJYn");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         _idPageMap = new HashMap<>();
