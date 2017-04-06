@@ -156,7 +156,10 @@ public class MainActivity extends AppCompatActivity
             if (_idPageMap.containsValue(_webView.getUrl())) {
                 // this is a navigation URL, so we should change the highlighted element in nav drawer
                 _navigationIds.pop();
-                _navigationView.setCheckedItem(_navigationIds.peek());
+                if (!_navigationIds.empty()) {
+                    // This check shouldn't really be necessary, I think?
+                    _navigationView.setCheckedItem(_navigationIds.peek());
+                }
             }
         } else {
             super.onBackPressed();
