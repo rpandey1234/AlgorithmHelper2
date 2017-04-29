@@ -3,6 +3,7 @@ package edu.stanford.algorithms;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -87,6 +88,13 @@ public class MainActivity extends AppCompatActivity
         _idPageMap.put(R.id.nav_graphs, BASE_URL + GRAPHS_PATH);
         _idPageMap.put(R.id.nav_about, BASE_URL + ABOUT_PATH);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // chromium, enable hardware acceleration
+            _webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            // older android version, disable hardware acceleration
+            _webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
         _webView.getSettings().setJavaScriptEnabled(true);
