@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity
         // Enable responsive layout
         _webView.getSettings().setUseWideViewPort(true);
         _webView.getSettings().setJavaScriptEnabled(true);
+        _webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         _webView.addJavascriptInterface(new JavascriptInterfaceDownloader(this), "downloadHtml");
         _webView.setWebViewClient(new WebViewClient() {
             @Override
