@@ -35,8 +35,8 @@ android {
         applicationId "edu.stanford.algorithms"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 11
-        versionName "1.7"
+        versionCode 18
+        versionName "1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
