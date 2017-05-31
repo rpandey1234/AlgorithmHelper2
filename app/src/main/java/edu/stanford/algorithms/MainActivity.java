@@ -147,12 +147,12 @@ public class MainActivity extends AppCompatActivity
                 initialMenuItem = R.id.nav_graphs;
             }
         }
-        _webView.loadUrl(_idPageMap.get(initialMenuItem));
         _navigationIds = new Stack<>();
         _navigationView.setNavigationItemSelectedListener(this);
 
         _navigationView.setCheckedItem(initialMenuItem);
-        _navigationIds.push(initialMenuItem);
+
+        onNavigationItemSelected(initialMenuItem);
     }
 
     @Override
@@ -178,15 +178,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        onNavigationItemSelected(item.getItemId());
+        return true;
+    }
+
+    private void onNavigationItemSelected(int itemId) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == _navigationIds.peek()) {
+        if (!_navigationIds.isEmpty() && itemId == _navigationIds.peek()) {
             // User tapped on same page, don't do anything
             _drawer.closeDrawer(GravityCompat.START);
-            return true;
+            return;
         }
-        _navigationIds.push(id);
-        String pageUrl = _idPageMap.get(id);
+        _navigationIds.push(itemId);
+        String pageUrl = _idPageMap.get(itemId);
         if (pageUrl == null) {
             throw new IllegalStateException("Could not find the page");
         }
@@ -206,9 +210,8 @@ public class MainActivity extends AppCompatActivity
                 _webView.loadUrl(ERROR_FILE_PATH);
             }
         }
-        _fabRating.setVisibility(id == R.id.nav_about ? VISIBLE : GONE);
+        _fabRating.setVisibility(itemId == R.id.nav_about ? VISIBLE : GONE);
         _drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @OnClick(R.id.fab_rating)
