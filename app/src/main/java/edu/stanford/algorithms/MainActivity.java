@@ -214,6 +214,7 @@ public class MainActivity extends AppCompatActivity
         _drawer.closeDrawer(GravityCompat.START);
     }
 
+    @SuppressWarnings("unused")
     @OnClick(R.id.fab_rating)
     public void onRateUsButtonTap(View view) {
         Answers.getInstance().logCustom(new CustomEvent("Rate button tapped"));
@@ -230,8 +231,9 @@ public class MainActivity extends AppCompatActivity
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
             return (exitValue == 0);
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }
