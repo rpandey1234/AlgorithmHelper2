@@ -25,7 +25,7 @@ android {
         config {
             keyAlias 'AndroidKey'
             keyPassword 'stanfordandroid'
-            storeFile file('/Users/rahul/keystores/android.jks')
+            storeFile file('/Users/rkpandey/Dropbox/App signing/android.jks')
             storePassword 'codepathtrain'
         }
     }
@@ -35,7 +35,7 @@ android {
         applicationId "edu.stanford.algorithms"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 18
+        versionCode 19
         versionName "1.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

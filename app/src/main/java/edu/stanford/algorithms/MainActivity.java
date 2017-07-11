@@ -44,6 +44,7 @@ import static android.view.View.VISIBLE;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final String APPS_FLYER_KEY = "mJaxhcAiiPpiPBeJhckJYn";
     public static final String BASE_URL = "http://rkpandey.com/AlgorithmHelper/";
     public static final String INDEX_PATH = "index";
     public static final String TREES_PATH = "Trees";
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                 .build();
         Fabric.with(this, crashlyticsKit);
-        AppsFlyerLib.getInstance().startTracking(this.getApplication(), "mJaxhcAiiPpiPBeJhckJYn");
+        AppsFlyerLib.getInstance().startTracking(this.getApplication(), APPS_FLYER_KEY);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         _idPageMap = new HashMap<>();
